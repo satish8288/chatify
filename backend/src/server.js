@@ -26,7 +26,18 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(PORT, () => {
-  console.log("server is running on port " + PORT);
-  connectDB();
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+    console.log("MongoDB connected");
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to connect DB:", error);
+    process.exit(1); // 1 means fail and 0 means success
+  }
+};
+
+startServer();

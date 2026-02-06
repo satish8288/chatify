@@ -4,12 +4,17 @@ import { generateToken } from "../lib/utils.js";
 
 export const signup = async (req, res) => {
   const { email, fullName, password } = req.body;
+  const name = typeof fullName === "string" ? fullName.trim() : "";
+  const normalizedEmail =
+    typeof email === "string" ? email.trim().toLowerCase() : "";
+  const pass = typeof password === "string" ? password : "";
+
   try {
-    if (!email || !fullName || !password) {
+    if (!normalizedEmail || !name || !pass) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    if (password.length < 6) {
+    if (pass.length < 6) {
       return res
         .status(400)
         .json({ message: "Password must be at least 6 character" });
@@ -17,36 +22,36 @@ export const signup = async (req, res) => {
 
     // check if emails valid : regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(normalizedEmail)) {
       return res.status(400).json({ message: "Invalid email format" });
     }
 
     //check existing user
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: normalizedEmail });
     if (user) {
       return res.status(400).json({ message: "User already exists" });
     }
 
     // Hashing password
     const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
+    const hashPassword = await bcrypt.hash(pass, salt);
 
     //create new user
     const newUser = new User({
-      fullName,
-      email,
+      fullName: name,
+      email: normalizedEmail,
       password: hashPassword,
     });
 
     //check if user
     if (newUser) {
-      generateToken(newUser.id, res);
-      await newUser.save();
+      const savedUser = await newUser.save();
+      generateToken(savedUser.id, res);
       res.status(201).json({
-        _id: newUser._id,
-        fullName: newUser.fullName,
-        email: newUser.email,
-        profilePic: newUser.profilePic,
+        _id: savedUser._id,
+        fullName: savedUser.fullName,
+        email: savedUser.email,
+        profilePic: savedUser.profilePic,
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
