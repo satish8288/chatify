@@ -1,6 +1,8 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/utils.js";
+import { sendWelcomeEmail } from "../emails/emailHandlers.js";
+import { ENV } from "../lib/env.js";
 
 export const signup = async (req, res) => {
   const { email, fullName, password } = req.body;
@@ -26,7 +28,7 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: "Invalid email format" });
     }
 
-    //check existing user
+    //check if user exists
     const user = await User.findOne({ email: normalizedEmail });
     if (user) {
       return res.status(400).json({ message: "User already exists" });
@@ -53,6 +55,14 @@ export const signup = async (req, res) => {
         email: savedUser.email,
         profilePic: savedUser.profilePic,
       });
+
+      //Send welcome email to client
+      try {
+        const clientURL = ENV.CLIENT_URL;
+        await sendWelcomeEmail(savedUser.fullName, savedUser.email, clientURL);
+      } catch (error) {
+        console.log("Failed to send welcome email", error);
+      }
     } else {
       res.status(400).json({ message: "Invalid user data" });
     }
