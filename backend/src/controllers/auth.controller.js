@@ -4,6 +4,7 @@ import { generateToken } from "../lib/utils.js";
 import { sendWelcomeEmail } from "../emails/emailHandlers.js";
 import { ENV } from "../lib/env.js";
 
+//signup
 export const signup = async (req, res) => {
   const { email, fullName, password } = req.body;
   const name = typeof fullName === "string" ? fullName.trim() : "";
@@ -70,4 +71,35 @@ export const signup = async (req, res) => {
     console.log("Error in signup controller", error);
     res.status(500).json({ message: "Internal server error" });
   }
+};
+
+//login
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "Invalid Credential!" });
+
+    const isCorrectPassword = await bcrypt.compare(password, user.password);
+    if (!isCorrectPassword)
+      return res.status(400).json({ message: "Invalid Credential!" });
+
+    generateToken(user.id, res);
+
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.error("Error in login controller:", error);
+    res.status(500).json({ message: "Internal server error!" });
+  }
+};
+
+// logout
+export const logout = async (req, res) => {
+  res.cookie("jwt", "", { maxAge: 0 });
+  res.status(200).json({ message: "Logged out succesfully" });
 };
