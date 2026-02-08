@@ -76,11 +76,21 @@ export const signup = async (req, res) => {
 //login
 export const login = async (req, res) => {
   const { email, password } = req.body;
+  const normalizedEmail =
+    typeof email === "string" ? email.trim().toLowerCase() : "";
+  const pass = typeof password === "string" ? password : "";
+
   try {
-    const user = await User.findOne({ email });
+    if (!normalizedEmail || !pass) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
+    }
+
+    const user = await User.findOne({ email: normalizedEmail });
     if (!user) return res.status(400).json({ message: "Invalid Credential!" });
 
-    const isCorrectPassword = await bcrypt.compare(password, user.password);
+    const isCorrectPassword = await bcrypt.compare(pass, user.password);
     if (!isCorrectPassword)
       return res.status(400).json({ message: "Invalid Credential!" });
 
@@ -100,6 +110,11 @@ export const login = async (req, res) => {
 
 // logout
 export const logout = async (req, res) => {
-  res.cookie("jwt", "", { maxAge: 0 });
-  res.status(200).json({ message: "Logged out succesfully" });
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: ENV.NODE_ENV === "development" ? false : true,
+    path: "/",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
 };
