@@ -14,8 +14,8 @@ const _dirname = path.resolve();
 
 const PORT = ENV.PORT || 5000;
 
-app.use(express.json()); //req.body
-app.use(cookieParser()); //req.body
+app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/auth", messageRoutes);

@@ -134,7 +134,7 @@ export const updateProfilePic = async (req, res) => {
       userId,
       { profilePic: uploadResponse },
       { new: true }
-    );
+    ).select("-password");
     res.status(200).json(updatedUser);
   } catch (error) {
     console.error("Error in updateProfile controller middleware", error);
