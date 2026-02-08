@@ -10,16 +10,3 @@ export const ENV = {
   EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME,
   CLIENT_URL: process.env.CLIENT_URL,
 };
-
-// PORT=3000
-// MONGO_URI= mongodb+srv://satishbhardwaj8288_db_user:3i6EB9Cisl7rcVu8@cluster0.w6tnxtg.mongodb.net/chatify_db?appName=Cluster0
-
-// NODE_ENV=development
-
-// JWT_SECRET=my_secret_token
-
-// RESEND_API_KEY=re_CyTFtNMn_DRjaisTG2xmEghX2gnyDGfeg
-// EMAIL_FROM="onboarding@resend.dev"
-// EMAIL_FROM_NAME="Satish"
-
-// CLIENT_URL= http://localhost:5173
