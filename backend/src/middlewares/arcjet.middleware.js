@@ -4,8 +4,6 @@ import { isSpoofedBot } from "@arcjet/inspect";
 const rateLimiter = async (req, res, next) => {
   try {
     const decision = await aj.protect(req);
-    console.log(decision.isDenied());
-    console.log(decision.reason.isRateLimit());
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
         return res
@@ -23,7 +21,7 @@ const rateLimiter = async (req, res, next) => {
     // check for spoofed bots
     if (decision.results.some(isSpoofedBot)) {
       return res.status(403).json({
-        error: "Spoofed bot detectd",
+        error: "Spoofed bot detected",
         message: "Malicious bot activity detected",
       });
     }

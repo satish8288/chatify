@@ -12,19 +12,13 @@ const router = express.Router();
 
 router.use(rateLimiter);
 
-router.get("/test", (req, res) => {
-  res.status(200).json({
-    message: "testing rate limiting",
-  });
-});
+router.post("/signup", signup);
 
-router.post("/signup", signup, (req, res) => {});
+router.post("/login", login);
 
-router.post("/login", login, (req, res) => {});
+router.post("/logout", logout);
 
-router.post("/logout", logout, (req, res) => {});
-
-router.put("/update-profile", protectRoute, updateProfilePic, (req, res) => {});
+router.put("/update-profile", protectRoute, updateProfilePic);
 
 router.get("/check", protectRoute, (req, res) => {
   res.status(200).json(req.user);

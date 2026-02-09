@@ -109,7 +109,7 @@ export const login = async (req, res) => {
   }
 };
 
-// logout logout
+// logout controller
 export const logout = async (req, res) => {
   res.clearCookie("jwt", {
     httpOnly: true,
