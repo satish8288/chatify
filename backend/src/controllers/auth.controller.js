@@ -5,7 +5,7 @@ import { sendWelcomeEmail } from "../emails/emailHandlers.js";
 import { ENV } from "../lib/env.js";
 import cloudinary from "../lib/cloudinary.js";
 
-//signup
+//signup controller
 export const signup = async (req, res) => {
   const { email, fullName, password } = req.body;
   const name = typeof fullName === "string" ? fullName.trim() : "";
@@ -74,7 +74,7 @@ export const signup = async (req, res) => {
   }
 };
 
-//login
+//login controller
 export const login = async (req, res) => {
   const { email, password } = req.body;
   const normalizedEmail =
@@ -109,7 +109,7 @@ export const login = async (req, res) => {
   }
 };
 
-// logout
+// logout controller
 export const logout = async (req, res) => {
   res.clearCookie("jwt", {
     httpOnly: true,

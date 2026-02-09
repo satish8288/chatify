@@ -10,6 +10,8 @@ import cookieParser from "cookie-parser";
 dotenv.config();
 
 const app = express();
+app.set("trust proxy", true);
+
 const _dirname = path.resolve();
 
 const PORT = ENV.PORT || 5000;
