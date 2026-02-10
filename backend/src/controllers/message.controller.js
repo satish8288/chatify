@@ -1,5 +1,5 @@
 import cloudinary from "../lib/cloudinary.js";
-import Message from "../models/message.js";
+import Message from "../models/Message.js";
 import User from "../models/User.js";
 
 export const getAllContacts = async (req, res) => {
@@ -39,10 +39,22 @@ export const sendMessage = async (req, res) => {
   try {
     const senderId = req.user._id;
     const receiverId = req.params.id;
-
-    let imageUrl;
     const { text, image } = req.body;
 
+    if (!text && !image) {
+      return res.status(400).json({ message: "Text or image is required." });
+    }
+    if (senderId.equals(receiverId)) {
+      return res
+        .status(400)
+        .json({ message: "Cannot send messages to yourself." });
+    }
+    const receiverExists = await User.exists({ _id: receiverId });
+    if (!receiverExists) {
+      return res.status(404).json({ message: "Receiver not found." });
+    }
+
+    let imageUrl;
     if (image) {
       const uploadResponse = await cloudinary.uploader.upload(image);
       imageUrl = uploadResponse.secure_url;
