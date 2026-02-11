@@ -6,9 +6,10 @@ import {
   getMessageByUserId,
   getChatPartners,
 } from "../controllers/message.controller.js";
+import rateLimiter from "../middlewares/arcjet.middleware.js";
 
 const router = express.Router();
-router.use(protectRoute);
+router.use(rateLimiter, protectRoute);
 
 router.get("/contacts", getAllContacts);
 router.get("/chats", getChatPartners);
