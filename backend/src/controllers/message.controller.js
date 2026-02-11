@@ -1,5 +1,5 @@
 import cloudinary from "../lib/cloudinary.js";
-import Message from "../models/Message.js";
+import Message from "../models/message.js";
 import User from "../models/User.js";
 
 export const getAllContacts = async (req, res) => {
@@ -84,6 +84,7 @@ export const getChatPartners = async (req, res) => {
     const messages = await Message.find({
       $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
     });
+    console.log(messages);
 
     const chatPartnerIds = [
       ...new Set(
