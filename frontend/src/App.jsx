@@ -1,15 +1,23 @@
 import React from "react";
-import { Routes, Route } from "react-router";
+import { Routes, Route, Navigate } from "react-router";
 import ChatPage from "./pages/ChatPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import { useAuthStore } from "./store/useAuthStore";
+import { useEffect } from "react";
+import PageLoader from "./components/PageLoader";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
-  const { authUser, isLoggedIn, login } = useAuthStore();
-  console.log("auth user: ", authUser);
-  // console.log("isLoading: ", isLoading);
-  console.log("isLoggedIn: ", isLoggedIn);
+  const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  console.log(authUser);
+  if (isCheckingAuth) return <PageLoader />;
+  console.log(isCheckingAuth);
 
   return (
     <div className="min-h-screen bg-slate-900 relative flex items-center justify-center p-4 overflow-hidden">
@@ -18,16 +26,20 @@ const App = () => {
       <div className="absolute bottom-0 -right-4 size-96 bg-cyan-500 opacity-20 blur-[100px]" />
 
       <Routes>
-        <Route path="/" element={<ChatPage />}></Route>
-        <Route path="/login" element={<LoginPage />}></Route>
-        <Route path="/signup" element={<SignUpPage />}></Route>
+        <Route
+          path="/"
+          element={authUser ? <ChatPage /> : <Navigate to={"/login"} />}
+        ></Route>
+        <Route
+          path="/login"
+          element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}
+        ></Route>
+        <Route
+          path="/signup"
+          element={!authUser ? <SignUpPage /> : <Navigate to={"/"} />}
+        ></Route>
       </Routes>
-      <button
-        onClick={login}
-        className="px-4 py-2 bg-blue-500 text-white rounded z-10"
-      >
-        Button
-      </button>
+      <Toaster />
     </div>
   );
 };
