@@ -9,7 +9,7 @@ import {
   LoaderIcon,
 } from "lucide-react";
 import { Link } from "react-router";
-
+import toast from "react-hot-toast";
 function SignUpPage() {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -20,6 +20,20 @@ function SignUpPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (
+      !formData.fullName.trim() ||
+      !formData.email.trim() ||
+      !formData.password
+    ) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
     signup(formData);
   };
 
@@ -55,7 +69,7 @@ function SignUpPage() {
                           setFormData({ ...formData, fullName: e.target.value })
                         }
                         className="input"
-                        placeholder="John Doe"
+                        placeholder="satish"
                       />
                     </div>
                   </div>
@@ -73,7 +87,7 @@ function SignUpPage() {
                           setFormData({ ...formData, email: e.target.value })
                         }
                         className="input"
-                        placeholder="johndoe@gmail.com"
+                        placeholder="satish@gmail.com"
                       />
                     </div>
                   </div>
