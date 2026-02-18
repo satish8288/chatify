@@ -27,7 +27,9 @@ export const useChatStore = create((set, get) => ({
       const res = await axiosInstance.get("/contacts");
       set({ allContacts: res.data });
     } catch (error) {
-      toast.error(error.response.data.messages);
+      toast.error(
+        error.response?.data?.message || error.message || "An error occurred"
+      );
     } finally {
       set({ isLoading: false });
     }
