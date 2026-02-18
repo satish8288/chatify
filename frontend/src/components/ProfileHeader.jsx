@@ -1,7 +1,7 @@
 import React from "react";
 
-const ProfileHEader = () => {
-  return <div>ProfileHEader</div>;
+const ProfileHeader = () => {
+  return <div>ProfileHeader</div>;
 };
 
-export default ProfileHEader;
+export default ProfileHeader;
