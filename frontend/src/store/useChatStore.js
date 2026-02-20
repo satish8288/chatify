@@ -10,7 +10,7 @@ export const useChatStore = create((set, get) => ({
   selectedUser: null,
   isLoading: false,
   isMessageLoading: false,
-  isSoundEnable: localStorage.getItem("isSoundEnable") === "true",
+  isSoundEnable: JSON.parse(localStorage.getItem("isSoundEnable") === true),
 
   toggleSound: () => {
     localStorage.setItem("isSoundEnable", !get().isSoundEnable);

@@ -123,7 +123,7 @@ export const logout = async (req, res) => {
 //update profile pic
 export const updateProfilePic = async (req, res) => {
   try {
-    const profilePic = req.body;
+    const { profilePic } = req.body;
     if (!profilePic)
       return res.status(400).json({ message: "Profile pic is required" });
 
@@ -132,7 +132,7 @@ export const updateProfilePic = async (req, res) => {
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { profilePic: uploadResponse },
+      { profilePic: uploadResponse.secure_url },
       { new: true }
     ).select("-password");
     res.status(200).json(updatedUser);
