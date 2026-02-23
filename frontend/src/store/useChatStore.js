@@ -24,7 +24,7 @@ export const useChatStore = create((set, get) => ({
   getAllContacts: async () => {
     set({ isLoading: true });
     try {
-      const res = await axiosInstance.get("/contacts");
+      const res = await axiosInstance.get("/message/contacts");
       set({ allContacts: res.data });
     } catch (error) {
       toast.error(
@@ -38,7 +38,7 @@ export const useChatStore = create((set, get) => ({
   getChatPartners: async () => {
     set({ isLoading: true });
     try {
-      const res = await axiosInstance.get("/messages/chats");
+      const res = await axiosInstance.get("/message/chats");
       set({ chats: res.data });
     } catch (error) {
       toast.error(
