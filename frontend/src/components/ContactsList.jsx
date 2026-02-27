@@ -2,9 +2,9 @@ import React from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useEffect } from "react";
 import UserLoadingSkeleton from "./UserLoadingSkeleton";
-import { useAuthStore } from "../store/useAuthStore";
+// import { useAuthStore } from "../store/useAuthStore";
 const ContactsList = () => {
-  const { getAllContacts, allContacts, selectedUser, isLoading } =
+  const { getAllContacts, allContacts, setSelectedUser, isLoading } =
     useChatStore();
   // const { onlineUsers } = useAuthStore();
 
@@ -13,13 +13,16 @@ const ContactsList = () => {
   }, [getAllContacts]);
 
   if (isLoading) return <UserLoadingSkeleton />;
+
+  // console.log("contacts:", allContacts);
+
   return (
     <>
       {allContacts.map((contact) => (
         <div
           key={contact._id}
           className="bg-cyan-500/10 p-4 rounded-lg cursor-pointer hover:bg-cyan-500/20 transition-colors"
-          onClick={() => selectedUser(contact)}
+          onClick={() => setSelectedUser(contact)}
         >
           <div className="flex items-center gap-3">
             <div
@@ -28,7 +31,10 @@ const ContactsList = () => {
             // }`}
             >
               <div className="size-12 rounded-full">
-                <img src={contact.profilePic || "/avatar.png"} />
+                <img
+                  src={contact.profilePic || "/avatar.png"}
+                  alt={contact.fullName}
+                />
               </div>
             </div>
             <h4 className="text-slate-200 font-medium">{contact.fullName}</h4>
