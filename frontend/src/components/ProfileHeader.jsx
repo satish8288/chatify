@@ -79,7 +79,7 @@ const ProfileHeader = () => {
             className="text-slate-400 hover:text-slate-200 transition-colors ml-3"
             onClick={() => {
               // play click sound before toggling
-              mouseClickSound.currentTime = 0; // reset to start
+              mouseClickSound.currentTime = 0;
               mouseClickSound
                 .play()
                 .catch((error) => console.log("Audio play failed:", error));
