@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import BorderAnimation from "../components/BorderAnimation";
+import { Link } from "react-router";
 import {
   MessageCircleIcon,
   LockIcon,
@@ -8,32 +9,19 @@ import {
   UserIcon,
   LoaderIcon,
 } from "lucide-react";
-import { Link } from "react-router";
-import toast from "react-hot-toast";
+
 function SignUpPage() {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
   });
+
   const { signup, isSigningUp } = useAuthStore();
 
   const handleSubmit = (e) => {
+    console.log("handle click chala");
     e.preventDefault();
-    if (
-      !formData.fullName.trim() ||
-      !formData.email.trim() ||
-      !formData.password
-    ) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      toast.error("Password must be at least 6 characters");
-      return;
-    }
-
     signup(formData);
   };
 
@@ -117,7 +105,7 @@ function SignUpPage() {
                     disabled={isSigningUp}
                   >
                     {isSigningUp ? (
-                      <LoaderIcon className="w-full h-5 animate-spin text-center" />
+                      <LoaderIcon className="h-5 w-5 animate-spin mx-auto" />
                     ) : (
                       "Create Account"
                     )}
