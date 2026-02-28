@@ -10,7 +10,6 @@ const MessageInput = () => {
   const { playRandomKeyStrokeSound } = useKeyboardSound();
   const { isSoundEnable, sendMessage } = useChatStore();
   const fileInputRef = useRef(null);
-  console.log("text:", text);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -30,8 +29,16 @@ const MessageInput = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    if (!file) return;
     if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file");
+      return;
+    }
+
+    // Keep below backend JSON limit after base64 overhead
+    const MAX_IMAGE_BYTES = 3.5 * 1024 * 1024;
+    if (file.size > MAX_IMAGE_BYTES) {
+      toast.error("Image is too large. Please choose a smaller file.");
       return;
     }
 

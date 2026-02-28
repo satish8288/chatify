@@ -20,7 +20,7 @@ const ChatContainer = () => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  });
+  }, [messages.length, selectedUser?._id]);
 
   return (
     <>

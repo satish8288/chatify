@@ -65,9 +65,13 @@ export const useChatStore = create((set, get) => ({
   },
 
   sendMessage: async (msg) => {
-    console.log(msg);
     const { selectedUser, messages } = get();
     const { authUser } = useAuthStore.getState();
+
+    if (!authUser || !selectedUser) {
+      toast.error("Unable to send message. Please try again.");
+      return;
+    }
 
     const tempId = `temp-${Date.now()}`;
 
