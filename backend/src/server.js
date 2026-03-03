@@ -8,9 +8,9 @@ import messageRoutes from "./routes/message.route.js";
 import { ENV } from "./lib/env.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { server, app } from "./lib/socket.js";
 dotenv.config();
 
-const app = express();
 app.set("trust proxy", true);
 
 const _dirname = path.resolve();
@@ -38,7 +38,7 @@ const startServer = async () => {
     await connectDB();
     console.log("MongoDB connected");
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {

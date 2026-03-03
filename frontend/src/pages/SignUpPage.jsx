@@ -20,7 +20,6 @@ function SignUpPage() {
   const { signup, isSigningUp } = useAuthStore();
 
   const handleSubmit = (e) => {
-    console.log("handle click chala");
     e.preventDefault();
     signup(formData);
   };

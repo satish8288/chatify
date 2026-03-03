@@ -20,7 +20,7 @@ const ChatContainer = () => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages.length, selectedUser?._id]);
+  }, [messages]);
 
   return (
     <>
@@ -73,4 +73,4 @@ const ChatContainer = () => {
   );
 };
 
-export default React.memo(ChatContainer);
+export default ChatContainer;
