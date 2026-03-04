@@ -1,4 +1,5 @@
 import cloudinary from "../lib/cloudinary.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 import Message from "../models/message.js";
 import User from "../models/User.js";
 
@@ -69,6 +70,11 @@ export const sendMessage = async (req, res) => {
 
     await newMessage.save();
 
+    // send events to receiver
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
     res.status(200).json(newMessage);
   } catch (error) {
     console.error("Error in sendMessage middleware", error);
@@ -79,13 +85,11 @@ export const sendMessage = async (req, res) => {
 export const getChatPartners = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
-    // console.log("logged user:", loggedInUserId);
 
     // find all the messages where the logged-in user is either sender or receiver
     const messages = await Message.find({
       $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
     });
-    // console.log("chatsPartners:", messages);
 
     const chatPartnerIds = [
       ...new Set(
