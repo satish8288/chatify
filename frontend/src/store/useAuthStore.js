@@ -15,6 +15,7 @@ export const useAuthStore = create((set, get) => ({
   socket: null,
   onlineUsers: [],
 
+  // check Auth
   checkAuth: async () => {
     try {
       set({ isCheckingAuth: true, error: null });
@@ -31,6 +32,7 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  // signup
   signup: async (data) => {
     set({ isSigningUp: true });
     try {
@@ -46,6 +48,7 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  // login
   login: async (data) => {
     try {
       set({ isLoggedIn: true });
@@ -64,25 +67,24 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  //logout
   logout: async () => {
     try {
       await axiosInstance.post("/auth/logout");
-      set({ authUser: null });
       toast.success("Logged out successfully");
       get().disconnectSocket();
+      set({ authUser: null });
     } catch (error) {
       console.log("Logged out error", error);
       toast.error("Error in logging out");
     }
   },
 
+  //updateProfile
   updateProfile: async (data) => {
-    console.log("hello");
     set({ isLoading: true });
     try {
       const res = await axiosInstance.put("auth/update-profile", data);
-      console.log(res);
-
       set({ authUser: res.data });
       toast.success("Profile updated successfully");
     } catch (error) {
@@ -93,8 +95,8 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  // connect socket
   connectSocket: () => {
-    console.log("connectSocket");
     const { authUser } = get();
 
     if (!authUser || get().socket?.connected) return;
@@ -103,15 +105,23 @@ export const useAuthStore = create((set, get) => ({
 
     socket.connect();
     set({ socket });
-
+    console.log("socket:", socket);
     socket.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });
     });
   },
 
+  // disconnect socket
   disconnectSocket: () => {
-    console.log("disconnectSocket");
-    if (get().socket?.connected) get().socket.disconnect();
-    set({ socket: null });
+    const socket = get().socket;
+
+    if (!socket) {
+      set({ socket: null, onlineUsers: [] });
+      return;
+    }
+    socket.off("newMessage");
+    socket.off("getOnlineUsers");
+    socket.disconnect();
+    set({ socket: null, onlineUsers: [] });
   },
 }));

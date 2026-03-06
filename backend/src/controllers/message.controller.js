@@ -75,6 +75,7 @@ export const sendMessage = async (req, res) => {
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
+
     res.status(200).json(newMessage);
   } catch (error) {
     console.error("Error in sendMessage middleware", error);
