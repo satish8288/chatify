@@ -28,7 +28,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/message", messageRoutes);
-console.log("socket cookies:", socket.handshake.headers.cookie);
+
 //making ready for deployment
 if (ENV.NODE_ENV === "production") {
   app.use(express.static(path.join(_dirname, "../frontend/dist")));
