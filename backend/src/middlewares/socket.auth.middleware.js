@@ -5,11 +5,21 @@ import { ENV } from "../lib/env.js";
 export const socketAuthMiddleware = async (socket, next) => {
   try {
     // extract token
-    const token = socket.handshake.headers.cookie
-      ?.split("; ")
-      .find((row) => row.startsWith("jwt="))
-      ?.split("=")[1];
+    // const token = socket.handshake.headers.cookie
+    //   ?.split("; ")
+    //   .find((row) => row.startsWith("jwt="))
+    //   ?.split("=")[1];
+    const cookieHeader = socket.handshake.headers.cookie;
 
+    if (!cookieHeader) {
+      return next(new Error("Unauthorized - No cookie"));
+    }
+
+    const cookies = Object.fromEntries(
+      cookieHeader.split(";").map((c) => c.trim().split("="))
+    );
+
+    const token = cookies.jwt;
     // check token
     if (!token) {
       console.log("Socket connection rejected: No token provided");
