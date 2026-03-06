@@ -85,13 +85,17 @@ export const useChatStore = create((set, get) => ({
       isOptimistic: true,
     };
 
-    set({ messages: [...messages, optimisticMessage] });
+    set((state) => ({ messages: [...state.messages, optimisticMessage] }));
+
     try {
       const res = await axiosInstance.post(
         `/message/send/${selectedUser._id}`,
         msg
       );
-      set({ messages: messages.concat(res.data) });
+
+      set((state) => ({
+        messages: state.messages.map((m) => (m._id === tempId ? res.data : m)),
+      }));
     } catch (error) {
       set({ messages: messages });
       toast.error(error.response?.data?.message || "Something went wrong");
@@ -100,12 +104,18 @@ export const useChatStore = create((set, get) => ({
 
   suscribeToMessage: () => {
     const { selectedUser, isSoundEnable } = get();
+    const { authUser } = useAuthStore.getState();
+
     if (!selectedUser) return;
+
     const socket = useAuthStore.getState().socket;
 
     socket.on("newMessage", (newMessage) => {
+      if (newMessage.senderId === authUser._id) return;
+
       const isMessageSentFromSelectedUser =
         newMessage.senderId === selectedUser._id;
+
       if (!isMessageSentFromSelectedUser) return;
 
       const currentMessages = get().messages;
@@ -113,6 +123,7 @@ export const useChatStore = create((set, get) => ({
 
       if (isSoundEnable) {
         const notificationSound = new Audio("/sounds/notification.mp3");
+
         notificationSound.currentTime = 0;
         notificationSound
           .play()
@@ -123,6 +134,7 @@ export const useChatStore = create((set, get) => ({
 
   unSuscribeToMessage: () => {
     const socket = useAuthStore.getState().socket;
+    if (!socket) return;
     socket.off("newMessage");
   },
 }));
