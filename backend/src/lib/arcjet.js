@@ -1,8 +1,7 @@
 import arcjet, { shield, detectBot, slidingWindow } from "@arcjet/node";
 import { ENV } from "./env.js";
 
-const mode =
-  ENV.ARCJET_ENV && ENV.NODE_ENV === "production" ? "LIVE" : "DRY_RUN";
+const mode = ENV.ARCJET_ENV && ENV.NODE_ENV === "production" ? "LIVE" : "LIVE";
 export const aj = arcjet({
   key: ENV.ARCJET_KEY,
   rules: [
