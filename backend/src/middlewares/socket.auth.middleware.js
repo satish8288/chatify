@@ -4,7 +4,6 @@ import { ENV } from "../lib/env.js";
 
 export const socketAuthMiddleware = async (socket, next) => {
   try {
-    console.log("socket cookies:", socket.handshake.headers.cookie);
     // extract token
     // const token = socket.handshake.headers.cookie
     //   ?.split("; ")
@@ -12,6 +11,7 @@ export const socketAuthMiddleware = async (socket, next) => {
     //   ?.split("=")[1];
     const cookieHeader = socket.handshake.headers.cookie;
 
+    console.log("socket header:", socket.handshake.headers.cookie);
     if (!cookieHeader) {
       return next(new Error("Unauthorized - No cookie"));
     }
@@ -20,7 +20,10 @@ export const socketAuthMiddleware = async (socket, next) => {
       cookieHeader.split(";").map((c) => c.trim().split("="))
     );
 
+    console.log("cookies:", cookies);
     const token = cookies.jwt;
+    console.log("token:", token);
+
     // check token
     if (!token) {
       console.log("Socket connection rejected: No token provided");
