@@ -30,13 +30,13 @@ app.use("/api/auth", authRoutes);
 app.use("/api/message", messageRoutes);
 
 //making ready for deployment
-if (ENV.NODE_ENV === "production") {
-  app.use(express.static(path.join(_dirname, "../frontend/dist")));
+// if (ENV.NODE_ENV === "production") {
+//   app.use(express.static(path.join(_dirname, "../frontend/dist")));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(_dirname, "../frontend", "dist", "index.html"));
-  });
-}
+//   app.get("*", (req, res) => {
+//     res.sendFile(path.join(_dirname, "../frontend/dist/index.html"));
+//   });
+// }
 
 const startServer = async () => {
   try {
